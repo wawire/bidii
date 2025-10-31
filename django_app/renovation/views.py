@@ -27,7 +27,7 @@ def register_view(request):
             # Create profile for the user
             Profile.objects.create(
                 user=user,
-                email=user.email,
+                email=user.username + '@example.com',  # Placeholder email
                 role='customer'
             )
             login(request, user)

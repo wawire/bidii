@@ -1,0 +1,112 @@
+{% extends 'base.html' %}
+
+{% block title %}Dashboard - Bidii{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Dashboard</h1>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="card stat-card text-white mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Customers</h5>
+                <h2 class="display-4">{{ total_customers }}</h2>
+                <i class="bi bi-people" style="font-size: 3rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-white mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Leads</h5>
+                <h2 class="display-4">{{ total_leads }}</h2>
+                <i class="bi bi-funnel" style="font-size: 3rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-white mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Active Jobs</h5>
+                <h2 class="display-4">{{ active_jobs }}</h2>
+                <i class="bi bi-hammer" style="font-size: 3rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card stat-card text-white mb-3">
+            <div class="card-body">
+                <h5 class="card-title">Total Revenue</h5>
+                <h2 class="display-4">${{ total_revenue }}</h2>
+                <i class="bi bi-cash-stack" style="font-size: 3rem; opacity: 0.3;"></i>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Recent Leads and Jobs -->
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Recent Leads</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_leads %}
+                    <div class="list-group">
+                        {% for lead in recent_leads %}
+                            <a href="{% url 'lead_detail' lead.id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ lead.project_name }}</h6>
+                                    <small>{{ lead.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-1">Status: <span class="badge bg-primary">{{ lead.get_status_display }}</span></p>
+                                {% if lead.estimated_value %}
+                                    <small>Estimated Value: ${{ lead.estimated_value }}</small>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'lead_list' %}" class="btn btn-sm btn-outline-primary">View All Leads</a>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No leads yet. <a href="{% url 'lead_list' %}">Create your first lead</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Recent Jobs</h5>
+            </div>
+            <div class="card-body">
+                {% if recent_jobs %}
+                    <div class="list-group">
+                        {% for job in recent_jobs %}
+                            <a href="{% url 'job_detail' job.id %}" class="list-group-item list-group-item-action">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">Job #{{ job.job_number }}</h6>
+                                    <small>{{ job.created_at|date:"M d, Y" }}</small>
+                                </div>
+                                <p class="mb-1">Status: <span class="badge bg-success">{{ job.get_status_display }}</span></p>
+                                {% if job.start_date %}
+                                    <small>Start Date: {{ job.start_date|date:"M d, Y" }}</small>
+                                {% endif %}
+                            </a>
+                        {% endfor %}
+                    </div>
+                    <div class="text-center mt-3">
+                        <a href="{% url 'job_list' %}" class="btn btn-sm btn-outline-success">View All Jobs</a>
+                    </div>
+                {% else %}
+                    <p class="text-muted">No jobs yet. <a href="{% url 'job_list' %}">Create your first job</a></p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

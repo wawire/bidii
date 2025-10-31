@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Job {{ job.job_number }} - Bidii{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Job {{ job.job_number }}</h1>
+    <button class="btn btn-primary">Edit Job</button>
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <p><strong>Status:</strong> <span class="badge bg-success">{{ job.get_status_display }}</span></p>
+        <p><strong>Start Date:</strong> {{ job.start_date|date:"M d, Y"|default:"-" }}</p>
+        <p><strong>End Date:</strong> {{ job.end_date|date:"M d, Y"|default:"-" }}</p>
+        <p><strong>Actual Start:</strong> {{ job.actual_start_date|date:"M d, Y"|default:"-" }}</p>
+        <p><strong>Actual End:</strong> {{ job.actual_end_date|date:"M d, Y"|default:"-" }}</p>
+        <p><strong>Notes:</strong> {{ job.notes|default:"No notes" }}</p>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Materials</h5>
+            </div>
+            <div class="card-body">
+                {% if materials %}
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Quantity</th>
+                                <th>Cost</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for material in materials %}
+                                <tr>
+                                    <td>{{ material.name }}</td>
+                                    <td>{{ material.quantity }} {{ material.unit }}</td>
+                                    <td>${{ material.total_cost }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                {% else %}
+                    <p class="text-muted">No materials tracked.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card mb-4">
+            <div class="card-header">
+                <h5>Invoices</h5>
+            </div>
+            <div class="card-body">
+                {% if invoices %}
+                    <div class="list-group">
+                        {% for invoice in invoices %}
+                            <a href="{% url 'invoice_detail' invoice.id %}" class="list-group-item list-group-item-action">
+                                {{ invoice.invoice_number }} - ${{ invoice.total_amount }}
+                                <span class="badge bg-warning">{{ invoice.get_status_display }}</span>
+                            </a>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <p class="text-muted">No invoices created.</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

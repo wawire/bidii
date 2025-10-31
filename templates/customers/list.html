@@ -1,0 +1,55 @@
+{% extends 'base.html' %}
+
+{% block title %}Customers - Bidii{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Customers</h1>
+    <button class="btn btn-primary">
+        <i class="bi bi-plus-circle"></i> Add Customer
+    </button>
+</div>
+
+{% if customers %}
+    <div class="card">
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone</th>
+                            <th>Location</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for customer in customers %}
+                            <tr>
+                                <td><strong>{{ customer.name }}</strong></td>
+                                <td>{{ customer.email }}</td>
+                                <td>{{ customer.phone|default:"-" }}</td>
+                                <td>{{ customer.city|default:"-" }}, {{ customer.state|default:"-" }}</td>
+                                <td>{{ customer.created_at|date:"M d, Y" }}</td>
+                                <td>
+                                    <a href="{% url 'customer_detail' customer.id %}" class="btn btn-sm btn-outline-primary">
+                                        View
+                                    </a>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% else %}
+    <div class="alert alert-info">
+        <h4>No customers yet</h4>
+        <p>Start by adding your first customer.</p>
+        <button class="btn btn-primary">Add Customer</button>
+    </div>
+{% endif %}
+{% endblock %}
